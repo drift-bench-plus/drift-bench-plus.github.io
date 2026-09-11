@@ -245,6 +245,12 @@ td.best::after{content:"";display:inline-block;width:6px;height:6px;border-radiu
 .side-note b{color:var(--ink)}
 @media(max-width:860px){.split{grid-template-columns:1fr}}
 .fig-capped{max-width:780px;margin:30px auto 0}
+/* lightbox */
+.frame img{cursor:zoom-in}
+#lightbox{position:fixed;inset:0;z-index:99;display:none;align-items:center;justify-content:center;
+  background:rgba(15,23,32,.82);padding:32px;cursor:zoom-out}
+#lightbox.on{display:flex}
+#lightbox img{max-width:min(1400px,96vw);max-height:92vh;border-radius:10px;background:#fff;padding:10px}
 /* experiment panels */
 .exp-panel{display:none;margin-top:26px}
 .exp-panel.on{display:block}
@@ -780,6 +786,16 @@ function copyBib(btn){navigator.clipboard.writeText(document.getElementById("bib
 /* scroll reveal */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.12});
 document.querySelectorAll(".reveal").forEach(x=>io.observe(x));
+
+/* lightbox: click any framed figure to enlarge */
+const lb=document.createElement("div");lb.id="lightbox";lb.innerHTML="<img alt=\"\">";
+document.body.appendChild(lb);
+lb.addEventListener("click",()=>lb.classList.remove("on"));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")lb.classList.remove("on");});
+document.addEventListener("click",e=>{
+  const im=e.target.closest(".frame img");
+  if(!im)return;
+  lb.querySelector("img").src=im.src;lb.classList.add("on");});
 </script>
 </body>
 </html>
